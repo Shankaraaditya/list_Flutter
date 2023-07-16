@@ -14,6 +14,15 @@ class _NewItemState extends State<NewItem> {
     // Navigator.of(context).push(MaterialPageRoute(builder: builder))
   }
 
+  final _formkey = GlobalKey<
+      FormState>(); // Global key is generic <dynamic> and is used to so that form mmaintains its internal
+  // interanal state while build..
+  // two types of keys global key and Value key
+  // final _formkey = ValueKey();
+
+  void _saveitem() {
+    _formkey.currentState!.validate();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +33,8 @@ class _NewItemState extends State<NewItem> {
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: Form(
+          key:
+              _formkey, // key parameter is added to form //it is for all input fields inside form
           child: Column(
             children: [
               TextFormField(
@@ -53,7 +64,7 @@ class _NewItemState extends State<NewItem> {
                         if (value == null ||
                             value.isEmpty ||
                             int.tryParse(value) == null ||
-                            int.tryParse(value)! <=0 ) {
+                            int.tryParse(value)! <= 0) {
                           return "Must be between 1 and 50 characters";
                         }
                         return null;
@@ -96,11 +107,13 @@ class _NewItemState extends State<NewItem> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _formkey.currentState!.reset();
+                    },
                     child: const Text("Reset"),
                   ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: _saveitem,
                     child: const Text("Add Item"),
                   ),
                 ],
