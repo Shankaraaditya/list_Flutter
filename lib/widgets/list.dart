@@ -10,7 +10,7 @@ class GroceryList extends StatefulWidget {
 }
 
 class _GroceryListState extends State<GroceryList> {
-// if you are working on stateless widget then for "context" ->
+
   void _addNewItem() { 
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -47,4 +47,4 @@ class _GroceryListState extends State<GroceryList> {
       ),
     );
   }
-}
+} 
