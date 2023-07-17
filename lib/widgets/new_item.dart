@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_list/data/category.dart';
+import 'package:shopping_list/models/categories.dart';
+import 'package:shopping_list/models/grocery.dart';
 
 class NewItem extends StatefulWidget {
   const NewItem({super.key});
@@ -14,14 +16,30 @@ class _NewItemState extends State<NewItem> {
     // Navigator.of(context).push(MaterialPageRoute(builder: builder))
   }
 
-  final _formkey = GlobalKey<
-      FormState>(); // Global key is generic <dynamic> and is used to so that form mmaintains its internal
+  final _formkey = GlobalKey<FormState>();
+  // Global key is generic <dynamic> and is used to so that form mmaintains its internal
   // interanal state while build..
   // two types of keys global key and Value key
   // final _formkey = ValueKey();
+  var _enteredName = '';
+  var _enteredQuantity = 1;
+  var _selectedCategory = categories[Categories.vegetables];
 
   void _saveitem() {
     _formkey.currentState!.validate();
+    _formkey.currentState!
+        .save(); // onSaved parameter will be executed whenever this method (save()) gets called...
+    // print(_enteredName);
+    // print(_enteredQuantity);
+    // print(_selectedCategory);
+    Navigator.of(context).pop(
+      GroceryItem(
+        id: DateTime.now().toString(),
+        name: _enteredName,
+        quantity: _enteredQuantity,
+        category: _selectedCategory!,
+      ),
+    );
   }
 
   @override
@@ -52,6 +70,9 @@ class _NewItemState extends State<NewItem> {
                   }
                   return null;
                 },
+                onSaved: (value) {
+                  _enteredName = value!;
+                },
               ),
               Row(
                 children: [
@@ -59,7 +80,7 @@ class _NewItemState extends State<NewItem> {
                     child: TextFormField(
                       decoration:
                           const InputDecoration(label: Text("Quantity")),
-                      initialValue: '1',
+                      initialValue: _enteredQuantity.toString(),
                       validator: (value) {
                         if (value == null ||
                             value.isEmpty ||
@@ -69,6 +90,9 @@ class _NewItemState extends State<NewItem> {
                         }
                         return null;
                       },
+                      onSaved: (value) {
+                        _enteredQuantity = int.parse(value!);
+                      },
                     ),
                   ),
                   const SizedBox(
@@ -76,6 +100,10 @@ class _NewItemState extends State<NewItem> {
                   ),
                   Expanded(
                     child: DropdownButtonFormField(
+                      // onSaved: (value) {
+                      //   _selectedCategory = value ;
+                      // },
+                      value: _selectedCategory,
                       items: [
                         for (final category in categories.entries)
                           DropdownMenuItem(
@@ -95,7 +123,12 @@ class _NewItemState extends State<NewItem> {
                             ),
                           ),
                       ],
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        // setState(() {
+
+                        // });
+                        _selectedCategory = value;
+                      },
                     ),
                   ),
                 ],
